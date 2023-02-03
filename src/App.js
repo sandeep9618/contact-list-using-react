@@ -1,5 +1,4 @@
 import {Component} from 'react'
-
 import {v4 as uuidv4} from 'uuid'
 
 import ContactItem from './components/ContactItem'
@@ -8,19 +7,19 @@ import './App.css'
 
 const initialContactsList = [
   {
-    id: 1,
+    id: uuidv4(),
     name: 'Ram',
     mobileNo: 9999988888,
     isFavorite: false,
   },
   {
-    id: 2,
+    id: uuidv4(),
     name: 'Pavan',
     mobileNo: 8888866666,
     isFavorite: true,
   },
   {
-    id: 3,
+    id: uuidv4(),
     name: 'Nikhil',
     mobileNo: 9999955555,
     isFavorite: false,
@@ -34,41 +33,32 @@ class App extends Component {
     mobileNo: '',
   }
 
-  toggleStyles = id => {
+  toggleIsFavorite = id => {
     const {contactsList} = this.state
-
-    this.setState(prevState => ({
-      contactsList: prevState.contactsList.map(eachItem => {
-        if (eachItem.id === id) {
-          return eachItem.isFavorite
-            ? {...eachItem, isFavorite: !eachItem.isFavorite}
-            : {...eachItem, isFavorite: true}
-        }
-        return eachItem
-      }),
-    }))
+    const filterData = contactsList.map(eachContact => {
+      if (id === eachContact.id) {
+        return {...eachContact, isFavorite: !eachContact.isFavorite}
+      }
+      return eachContact
+    })
+    this.setState({contactsList: filterData})
   }
 
   onAddContact = event => {
     event.preventDefault()
-    const {name, mobileNo, contactsList} = this.state
+    const {name, mobileNo} = this.state
     const newContact = {
-      id: uuidv4,
+      id: uuidv4(),
       name,
       mobileNo,
       isFavorite: false,
     }
-    if (name === '') {
-      alert('Please Enter a Name')
-    } else if (mobileNo === '') {
-      alert('Please Enter a Mobile no')
-    } else {
-      this.setState(prevState => ({
-        contactsList: [...prevState.contactsList, newContact],
-        name: '',
-        mobileNo: '',
-      }))
-    }
+
+    this.setState(prevState => ({
+      contactsList: [...prevState.contactsList, newContact],
+      name: '',
+      mobileNo: '',
+    }))
   }
 
   onChangeMobileNo = event => {
@@ -111,8 +101,8 @@ class App extends Component {
             {contactsList.map(eachContact => (
               <ContactItem
                 key={eachContact.id}
-                toggleStyles={this.toggleStyles}
                 contactDetails={eachContact}
+                toggleIsFavorite={this.toggleIsFavorite}
               />
             ))}
           </ul>
